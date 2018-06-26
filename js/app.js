@@ -30,32 +30,67 @@ Create a variable in GLOBAL SCOPE for holding an ampty array and push click targ
 */
 let toggledCards = [];
 
-/* Flip the cards on both sides by applying the listener to the deck element and listening for each of the 16 child cards. This is using event delegation for better performance of the operation. 
+/* 
+Flip the cards on both sides by applying the listener to the deck element and listening for each of the 16 child cards. This is using event delegation for better performance of the operation. 
 */
 const deck = document.querySelector('.deck');
 	deck.addEventListener('click', event => {
 		const clickTarget = event.target;
 //			console.log(clickTarget);
-//add conditionals to isolate clicking any two cards
+// Add conditionals to isolate clicking any two cards
 		if (clickTarget.classList.contains('card') && toggledCards.length < 2) {
 			toggleCard(clickTarget);
 			addToggleCard(clickTarget);
 			if (toggledCards.length === 2) {
-				console.log('2 cards - YAY!');
+//				console.log('2 cards - YAY!');
+				// Call the checkForMatch function inside the click event listeners for 2 cards
+				checkForMatch(clickTarget);
 			}
 		}
 	});
 
-// Separated flipping cards into its own function separated from event listener
-	function toggleCard(clickTarget) {
-		clickTarget.classList.toggle('open');
-		clickTarget.classList.toggle('show');
+
+/*
+Separated flipping cards into its own function outside of event listener code. Old function name line was: function toggleCard(clickTarget) and clickTarget.classList.toggle...lines
+*/
+	function toggleCard(card) {
+		// Pass in each card element in the array
+		card.classList.toggle('open');
+		card.classList.toggle('show');
 	}
 
 	function addToggleCard(clickTarget) {
 		toggledCards.push(clickTarget);
 		console.log(toggledCards);
 	}
+
+/*
+Create function that checks if the two flipped cards match based on the array items to see if they are equal.
+*/
+	function checkForMatch() {
+		if (
+			toggledCards[0].firstElementChild.className ===
+			toggledCards[1].firstElementChild.className
+		) {
+//			console.log('Match!');
+// Toggle the .match class on both elements and reset the array
+			toggledCards[0].classList.toggle('match');
+			toggledCards[1].classList.toggle('match');
+			toggledCards = [];
+
+		} else {
+			// Add setTimeout so unmatched second flipped card stays visible
+			setTimeout(() => {
+			// console.log('Different!');
+			// Call the function toggleCard for both cards
+			toggleCard(toggledCards[0]);
+			toggleCard(toggledCards[1]);
+			// Call the toggle function on the array values, but must happen AFTER the timeout
+			toggledCards = [];
+		}, 1000);
+		}
+	}
+
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -64,6 +99,7 @@ const deck = document.querySelector('.deck');
  */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
+/*
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -77,6 +113,7 @@ function shuffle(array) {
 
     return array;
 }
+*/
 
 
 /*
