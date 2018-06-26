@@ -2,6 +2,39 @@
  * Create a list that holds all of your cards
  */
 
+// const cards = document.querySelectorAll('.card');
+// console.log(cards);
+
+/*
+for (card of cards) {
+	card.addEventListener('click', () => {
+		console.log("Click!");
+	});
+}
+*/
+
+// const card = document.querySelectorAll('.card');
+/*
+for (card of deck) {
+	card.addEventListener('click', event => {
+		const clickTarget = event.target;
+		if (clickTarget.classList.contains('card')) {
+			console.log("Click!");
+		}
+	});
+}
+*/
+/* The following code represents flipping the cards on both sides by appling the listener to the deck element and listening for each of the 16 child cards. This is using event delegation…for better performance of the operation. */
+
+const deck = document.querySelector('.deck');
+	deck.addEventListener('click', event => {
+		const clickTarget = event.target;
+//			console.log(clickTarget);
+		if (clickTarget.classList.contains('card')) {
+			clickTarget.classList.toggle('open');
+			clickTarget.classList.toggle('show');
+		}
+	});
 
 /*
  * Display the cards on the page
