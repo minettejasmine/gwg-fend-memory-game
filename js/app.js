@@ -24,18 +24,38 @@ for (card of deck) {
 	});
 }
 */
-/* The following code represents flipping the cards on both sides by appling the listener to the deck element and listening for each of the 16 child cards. This is using event delegation…for better performance of the operation. */
 
+/* 
+Create a variable in GLOBAL SCOPE for holding an ampty array and push click targets to this variable that represents the array.
+*/
+let toggledCards = [];
+
+/* Flip the cards on both sides by applying the listener to the deck element and listening for each of the 16 child cards. This is using event delegation for better performance of the operation. 
+*/
 const deck = document.querySelector('.deck');
 	deck.addEventListener('click', event => {
 		const clickTarget = event.target;
 //			console.log(clickTarget);
-		if (clickTarget.classList.contains('card')) {
-			clickTarget.classList.toggle('open');
-			clickTarget.classList.toggle('show');
+//add conditionals to isolate clicking any two cards
+		if (clickTarget.classList.contains('card') && toggledCards.length < 2) {
+			toggleCard(clickTarget);
+			addToggleCard(clickTarget);
+			if (toggledCards.length === 2) {
+				console.log('2 cards - YAY!');
+			}
 		}
 	});
 
+// Separated flipping cards into its own function separated from event listener
+	function toggleCard(clickTarget) {
+		clickTarget.classList.toggle('open');
+		clickTarget.classList.toggle('show');
+	}
+
+	function addToggleCard(clickTarget) {
+		toggledCards.push(clickTarget);
+		console.log(toggledCards);
+	}
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
