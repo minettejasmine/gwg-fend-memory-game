@@ -35,6 +35,7 @@ Create a variable in global scope to set / start number of moves at 0 at beginni
 */
 let moves = 0;
 const deck = document.querySelector('.deck');
+
 /*
 - Create a function that will initialize shuffling the deck. 
 - Needs to happen first and the function needs to be called immediately. 
@@ -78,6 +79,7 @@ deck.addEventListener('click', event => {
 			// Call the checkForMatch function inside the click event listeners for 2 cards
 			checkForMatch(clickTarget);
 			addMove(); // Call function to increment move++ on scoreboard
+			checkScore(); // Call function each time a move of 2 flipped cards is completed
 		}
 	}
 });
@@ -103,7 +105,7 @@ Separated flipping cards into its own function outside of event listener code. O
 
 	function addToggleCard(clickTarget) {
 		toggledCards.push(clickTarget);
-		console.log(toggledCards);
+		// console.log(toggledCards);
 	}
 
 /*
@@ -142,6 +144,31 @@ function addMove() {
 	moves++;
 	const movesText = document.querySelector('.moves');
 	movesText.innerHTML = moves;
+}
+
+/*
+Create function that checks score and removes/hides stars based on number of moves executed. Use a conditional to remove one star at a time once the threshold of moves is true.
+*/
+function checkScore() {
+	if (moves === 16 || moves === 24) {
+		hideStar();
+	}
+}
+
+/*
+Create a function that removes/hides one star at a time from the DOM. Includes a conditional and a break to 
+- only hide one star at a time
+- to maintain previously hidden stars, and 
+- will not hide any more stars once two stars are hidden; call hideStar() two times.
+*/
+function hideStar() {
+	const starList = document.querySelectorAll('.stars li');
+	for (star of starList) {
+		if (star.style.display !== 'none') {
+			star.style.display = 'none';
+			break;
+		}
+	}
 }
 
 /*
