@@ -29,32 +29,52 @@ for (card of deck) {
 Create a variable in GLOBAL SCOPE for holding an ampty array and push click targets to this variable that represents the array.
 */
 let toggledCards = [];
+const deck = document.querySelector('.deck');
+/*
+- Create a function that will initialize shuffling the deck. 
+- Needs to happen first and the function needs to be called immediately. 
+- Declare variable that provides the array to the shuffle(array) function by shuffling the "li" elements inside the deck element. 
+- Store the li's in a variable called cardsToShuffle by using querySelectorAll. 
+- A Node List is created, so Array.from() method is used to create a copied array from the Node List.
+- Need to replace the old card elements in the HTML by adding the new shuffled deck of cards to the DOM. For each card in the shuffledCards array, each card needs to be appended to the deck element. 
+- appendChild method is used because the array items are nodes and not strings. The nodes change their order in the HTML file within the parent deck element.
+*/
+function shuffleDeck() {
+	const cardsToShuffle = Array.from(document.querySelectorAll('.deck li'));
+//	console.log('Cards to Shuffle', cardsToShuffle);
+	const shuffledCards = shuffle(cardsToShuffle);
+//	console.log('Shuffled Cards', shuffledCards);
+	for (card of shuffledCards) {
+		deck.appendChild(card);
+	}
+}
+shuffleDeck();
 
 /* 
 Flip the cards on both sides by applying the listener to the deck element and listening for each of the 16 child cards. This is using event delegation for better performance of the operation. 
 */
-const deck = document.querySelector('.deck');
-	deck.addEventListener('click', event => {
-		const clickTarget = event.target;
-//			console.log(clickTarget);
+// const deck = document.querySelector('.deck');
+deck.addEventListener('click', event => {
+	const clickTarget = event.target;
+//		console.log(clickTarget);
 // Add conditionals to determine if a card was clicked, how many cards are clicked, and only populate array with the unique card to prevent double-counting the same card.
-		if (isClickValid(clickTarget)
-			/* Moved the following conditionals 
-			clickTarget.classList.contains('card') && 
-			!clickTarget.classList.contains('match') && 
-			toggledCards.length < 2 && 
-			!toggledCards.includes(clickTarget)
-			*/
-			) {
-			toggleCard(clickTarget);
-			addToggleCard(clickTarget);
-			if (toggledCards.length === 2) {
-//				console.log('2 cards - YAY!');
-				// Call the checkForMatch function inside the click event listeners for 2 cards
-				checkForMatch(clickTarget);
-			}
+	if (isClickValid(clickTarget)
+		/* Moved the following conditionals 
+		clickTarget.classList.contains('card') && 
+		!clickTarget.classList.contains('match') && 
+		toggledCards.length < 2 && 
+		!toggledCards.includes(clickTarget)
+		*/
+		) {
+		toggleCard(clickTarget);
+		addToggleCard(clickTarget);
+		if (toggledCards.length === 2) {
+//			console.log('2 cards - YAY!');
+			// Call the checkForMatch function inside the click event listeners for 2 cards
+			checkForMatch(clickTarget);
 		}
-	});
+	}
+});
 /*
 Separated conditional checks into one function called isClickValid: is the click on a card, is the click on a match T/F, how many cards clicked, and does the array only include unique cards - T/F - to prevent double-counting.
 */
@@ -115,7 +135,7 @@ Create function that checks if the two flipped cards match based on the array it
  */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
-/*
+
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -129,7 +149,7 @@ function shuffle(array) {
 
     return array;
 }
-*/
+
 
 
 /*
