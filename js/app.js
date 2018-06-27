@@ -29,6 +29,11 @@ for (card of deck) {
 Create a variable in GLOBAL SCOPE for holding an ampty array and push click targets to this variable that represents the array.
 */
 let toggledCards = [];
+ 
+/* 
+Create a variable in global scope to set / start number of moves at 0 at beginning of each game 
+*/
+let moves = 0;
 const deck = document.querySelector('.deck');
 /*
 - Create a function that will initialize shuffling the deck. 
@@ -72,6 +77,7 @@ deck.addEventListener('click', event => {
 //			console.log('2 cards - YAY!');
 			// Call the checkForMatch function inside the click event listeners for 2 cards
 			checkForMatch(clickTarget);
+			addMove(); // Call function to increment move++ on scoreboard
 		}
 	}
 });
@@ -126,6 +132,17 @@ Create function that checks if the two flipped cards match based on the array it
 		}, 1000);
 		}
 	}
+
+/* 
+Create addMove() function that 
+- increments moves++ and 
+- changes the HTML element on the scoreboard to the new value after every completed move (flipping two cards = 1 move)
+*/
+function addMove() {
+	moves++;
+	const movesText = document.querySelector('.moves');
+	movesText.innerHTML = moves;
+}
 
 /*
  * Display the cards on the page
