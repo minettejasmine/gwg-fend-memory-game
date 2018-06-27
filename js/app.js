@@ -37,8 +37,15 @@ const deck = document.querySelector('.deck');
 	deck.addEventListener('click', event => {
 		const clickTarget = event.target;
 //			console.log(clickTarget);
-// Add conditionals to isolate clicking any two cards
-		if (clickTarget.classList.contains('card') && toggledCards.length < 2) {
+// Add conditionals to determine if a card was clicked, how many cards are clicked, and only populate array with the unique card to prevent double-counting the same card.
+		if (isClickValid(clickTarget)
+			/* Moved the following conditionals 
+			clickTarget.classList.contains('card') && 
+			!clickTarget.classList.contains('match') && 
+			toggledCards.length < 2 && 
+			!toggledCards.includes(clickTarget)
+			*/
+			) {
 			toggleCard(clickTarget);
 			addToggleCard(clickTarget);
 			if (toggledCards.length === 2) {
@@ -48,8 +55,17 @@ const deck = document.querySelector('.deck');
 			}
 		}
 	});
-
-
+/*
+Separated conditional checks into one function called isClickValid: is the click on a card, is the click on a match T/F, how many cards clicked, and does the array only include unique cards - T/F - to prevent double-counting.
+*/
+	function isClickValid(clickTarget) {
+		return (
+			clickTarget.classList.contains('card') && 
+			!clickTarget.classList.contains('match') && 
+			toggledCards.length < 2 && 
+			!toggledCards.includes(clickTarget)
+		);
+	}
 /*
 Separated flipping cards into its own function outside of event listener code. Old function name line was: function toggleCard(clickTarget) and clickTarget.classList.toggle...lines
 */
