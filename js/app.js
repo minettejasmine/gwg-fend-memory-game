@@ -29,12 +29,23 @@ for (card of deck) {
 Create a variable in GLOBAL SCOPE for holding an ampty array and push click targets to this variable that represents the array.
 */
 let toggledCards = [];
- 
+
+/*
+Create variable in global scope which contains the on/off status of the clock with a Boolean value.
+*/
+let clockOff = true;
+// const clock = document.querySelector('.clock');
+let clockID;
+/*
+Create variable in global scope to hold the incremented value of time, starting at 0.
+*/
+ let time = 0;
 /* 
 Create a variable in global scope to set / start number of moves at 0 at beginning of each game 
 */
 let moves = 0;
 const deck = document.querySelector('.deck');
+
 
 /*
 - Create a function that will initialize shuffling the deck. 
@@ -72,6 +83,10 @@ deck.addEventListener('click', event => {
 		!toggledCards.includes(clickTarget)
 		*/
 		) {
+		if (clockOff) {
+			startClock();
+			clockOff = false;
+		} 
 		toggleCard(clickTarget);
 		addToggleCard(clickTarget);
 		if (toggledCards.length === 2) {
@@ -109,6 +124,45 @@ Separated flipping cards into its own function outside of event listener code. O
 	}
 
 /*
+Create functionality that will display the current time to the clock element on the score-panel in HTML. 
+Format time correctly:
+- use division operator to return how many times 60 goes into variable time and define that number as minutes
+- use remainder operator to see what time increments are leftover after dividing by 60 and define the remainder as seconds.
+- create a conditional to prepend a 0 when sewconds are less than two digits
+*/
+	
+function startClock() {
+	// time = 0;
+	clockID = setInterval(() => {
+		time++;
+		displayTime();
+		// console.log(time);
+	}, 1000);
+}
+// startClock();
+
+function displayTime() {
+	const clock = document.querySelector('.clock');
+	const minutes = Math.floor(time/60);
+	const seconds = time % 60;
+	if (seconds < 10) {
+		clock.innerHTML = `${minutes}:0${seconds}`;
+	} else {
+		clock.innerHTML = `${minutes}:${seconds}`;
+	}
+	//console.log(clock);
+	// clock.innerHTML = time;
+}
+//displayTime();
+
+/* 
+Stop the clock.
+*/
+function stopClock() {
+	clearInterval(clockID);
+}
+
+/* 
 Create function that checks if the two flipped cards match based on the array items to see if they are equal.
 */
 	function checkForMatch() {
