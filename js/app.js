@@ -39,13 +39,22 @@ let clockID;
 /*
 Create variable in global scope to hold the incremented value of time, starting at 0.
 */
- let time = 0;
+let time = 0;
 /* 
 Create a variable in global scope to set / start number of moves at 0 at beginning of each game 
 */
 let moves = 0;
 const deck = document.querySelector('.deck');
 
+/*
+Modal testing declared in global scope
+let time = 121; RESET NORMAL GLOBAL SCOPE to 0
+displayTime(); // 2:01
+let moves = 16; RESET NORMAL GLOBAL SCOPE to 0
+checkScore(); // 2 stars
+writeModalStats(); // write stats to modal
+toggleModal(); // open modal
+*/
 
 /*
 - Create a function that will initialize shuffling the deck. 
@@ -125,10 +134,6 @@ Separated flipping cards into its own function outside of event listener code. O
 
 /*
 Create functionality that will display the current time to the clock element on the score-panel in HTML. 
-Format time correctly:
-- use division operator to return how many times 60 goes into variable time and define that number as minutes
-- use remainder operator to see what time increments are leftover after dividing by 60 and define the remainder as seconds.
-- create a conditional to prepend a 0 when sewconds are less than two digits
 */
 	
 function startClock() {
@@ -141,6 +146,12 @@ function startClock() {
 }
 // startClock();
 
+/*
+Display time correctly:
+- use division operator to return how many times 60 goes into variable time and define that number as minutes
+- use remainder operator to see what time increments are leftover after dividing by 60 and define the remainder as seconds.
+- create a conditional to prepend a 0 when sewconds are less than two digits
+*/
 function displayTime() {
 	const clock = document.querySelector('.clock');
 	const minutes = Math.floor(time/60);
@@ -156,7 +167,7 @@ function displayTime() {
 //displayTime();
 
 /* 
-Stop the clock.
+Create functionality to stop the clock.
 */
 function stopClock() {
 	clearInterval(clockID);
@@ -247,6 +258,56 @@ function shuffle(array) {
 
     return array;
 }
+
+/*
+Create function that makes the modal appear and disappear when appropriate.
+*/
+function toggleModal() {
+	const modal = document.querySelector('.modal_background');
+	modal.classList.toggle('hide');
+}
+//toggleModal(); // Modal on test
+//toggleModal(); // Modal off test
+
+/* 
+Create function to populate stats in the modal.
+*/
+function writeModalStats() {
+	const timeStat = document.querySelector('.modal_time');
+	const clockTime = document.querySelector('.clock').innerHTML;
+	const movesStat = document.querySelector('.modal_moves');
+	const starsStat = document.querySelector('.modal_stars');
+	const stars = getStars();
+
+	timeStat.innerHTML = `Time = ${clockTime}`;
+	movesStat.innerHTML = `Moves = ${moves}`;
+	starsStat.innerHTML = `Stars = ${stars}`;
+}
+
+/*
+Create functionality to populate the modal with the correct amount of stars at the end of the game.
+*/
+function getStars() {
+	stars = document.querySelectorAll('.stars li');
+	starCount = 0;
+	for (star of stars) {
+		if (star.style.display !== 'none') {
+			starCount++;
+		}
+	}
+	//console.log(starCount); 2 for testing
+	return starCount;
+}
+
+/*
+Create functionality for the two modal buttons. Query the element and attach a click event listener to execute the function and then call toggleModal() function to close the modal after the clicking.
+*/
+document.querySelector('.modal_cancel').addEventListener('click', () => {
+	toggleModal();
+});
+document.querySelector('.modal_replay').addEventListener('click', () => {
+	console.log('replay'); // TODO: Call function to reset game.
+});
 
 
 
