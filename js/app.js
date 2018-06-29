@@ -41,10 +41,14 @@ Create variable in global scope to hold the incremented value of time, starting 
 */
 let time = 0;
 /* 
-Create a variable in global scope to set / start number of moves at 0 at beginning of each game 
+Create a variable in global scope to set / start number of moves at 0 at beginning of each game. 
 */
 let moves = 0;
 const deck = document.querySelector('.deck');
+/* 
+Create variable in global scope that counts the number of matched pairs.
+*/
+let matched = 0;
 
 /*
 Modal testing declared in global scope
@@ -172,34 +176,51 @@ Create functionality to stop the clock.
 function stopClock() {
 	clearInterval(clockID);
 }
-
 /* 
 Create function that checks if the two flipped cards match based on the array items to see if they are equal.
 */
-	function checkForMatch() {
-		if (
-			toggledCards[0].firstElementChild.className ===
-			toggledCards[1].firstElementChild.className
-		) {
+const TOTAL_PAIRS = 8;
+function checkForMatch() {
+	if (
+		toggledCards[0].firstElementChild.className ===
+		toggledCards[1].firstElementChild.className
+	) {
 //			console.log('Match!');
 // Toggle the .match class on both elements and reset the array
-			toggledCards[0].classList.toggle('match');
-			toggledCards[1].classList.toggle('match');
-			toggledCards = [];
-
-		} else {
-			// Add setTimeout so unmatched second flipped card stays visible
-			setTimeout(() => {
-			// console.log('Different!');
-			// Call the function toggleCard for both cards
-			toggleCard(toggledCards[0]);
-			toggleCard(toggledCards[1]);
-			// Call the toggle function on the array values, but must happen AFTER the timeout
-			toggledCards = [];
-		}, 1000);
+		toggledCards[0].classList.toggle('match');
+		toggledCards[1].classList.toggle('match');
+		toggledCards = [];
+		matched++;
+		if (matched === TOTAL_PAIRS) {
+		clearInterval(clockID);
+		gameOver();
 		}
+		
+	} else {
+		// Add setTimeout so unmatched second flipped card stays visible
+		setTimeout(() => {
+		// console.log('Different!');
+		// Call the function toggleCard for both cards
+		toggleCard(toggledCards[0]);
+		toggleCard(toggledCards[1]);
+		// Call the toggle function on the array values, but must happen AFTER the timeout
+		toggledCards = [];
+		}, 1000);
 	}
-
+	/*if (matched === TOTAL_PAIRS) {
+		clearInterval(clockID);
+		gameOver();
+		}
+		*/
+}
+/*
+Create functionality to turn off the game once all card pairs are matched. Create conditional to check when tyhe total matched pars is 8.  Then invoke the gameOver function that will stop the clock, write stats on the modal, and show the modal.
+*/
+function gameOver() {
+	stopClock();
+	writeModalStats();
+	toggleModal();
+}
 /* 
 Create addMove() function that 
 - increments moves++ and 
@@ -300,16 +321,86 @@ function getStars() {
 }
 
 /*
+Create a constant variable used to compare matched pairs.  Once incremented matched pairs equal this variable, the game is complete and stops.
+
+const TOTAL_PAIRS = 8;
+
+Create functionality to turn off the game once all card pairs are matched. Create conditional to check when tyhe total matched pars is 8.  Then invoke the gameOver function that will stop the clock, write stats on the modal, and show the modal.
+
+
+if (matched === TOTAL_PAIRS) {
+	gameOver();
+}
+
+function gameOver() {
+	stopClock();
+	writeModalStats();
+	toggleModal();
+}
+*/
+
+
+/*
 Create functionality for the two modal buttons. Query the element and attach a click event listener to execute the function and then call toggleModal() function to close the modal after the clicking.
 */
 document.querySelector('.modal_cancel').addEventListener('click', () => {
-	toggleModal();
+	resetGame(); // QUESTION: add resetGame() function here?
 });
+/*
+Link resetGame() function to a click event listener on the modal replay button.
+*/
 document.querySelector('.modal_replay').addEventListener('click', () => {
-	console.log('replay'); // TODO: Call function to reset game.
+	replayGame();
 });
 
+/*
+Create functionality to reset game. Nest other functions inside of resetGame(): resetClockAndTime(), resetMoves(), resetStars(), and shuffleDeck() so that game is ready to be played again.
+*/
+function resetGame() {
+	resetClockAndTime();
+	resetMoves();
+	resetStars();
+	shuffleDeck();
+}
 
+function resetClockAndTime() {
+	stopClock();
+	clockOff = true;
+	time = 0;
+	displayTime();
+}
+
+/* 
+Create functionality to reset the number of moves by setting the global variable moves to zero to change the moves display to 0.
+*/
+function resetMoves() {
+	moves = 0;
+	document.querySelector('.moves').innerHTML = moves;
+}
+
+/*
+Create functionality to reset stars variable to zero. Loop through starList to reset star display property back to inline.
+*/
+function resetStars() {
+	stars = 0; 
+	const starList = document.querySelectorAll('stars li');
+	for  (star of starList) {
+		star.style.display = 'inline';
+	}
+}
+/*
+Create functionality to replay game. This function invokes the resetGame() function and the toggleModal() function. Link this to the click event listener for the replay button on the modal.
+*/
+function replayGame() {
+	resetGame();
+	toggleModal();
+}
+
+/*
+Link resetGame() function to a click event listener on the reset button:
+document.querySelector('.restart').addEventListener('click', resetGame);
+document.querySelector('.modal_replay').addEventListener('click', resetGame);
+*/
 
 /*
  * set up the event listener for a card. If a card is clicked:
