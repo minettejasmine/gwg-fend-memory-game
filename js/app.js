@@ -179,7 +179,7 @@ function stopClock() {
 /* 
 Create function that checks if the two flipped cards match based on the array items to see if they are equal.
 */
-const TOTAL_PAIRS = 8;
+const TOTAL_PAIRS = 8; 
 function checkForMatch() {
 	if (
 		toggledCards[0].firstElementChild.className ===
@@ -192,7 +192,7 @@ function checkForMatch() {
 		toggledCards = [];
 		matched++;
 		if (matched === TOTAL_PAIRS) {
-		clearInterval(clockID);
+		// clearInterval(clockID);
 		gameOver();
 		}
 		
@@ -207,11 +207,6 @@ function checkForMatch() {
 		toggledCards = [];
 		}, 1000);
 	}
-	/*if (matched === TOTAL_PAIRS) {
-		clearInterval(clockID);
-		gameOver();
-		}
-		*/
 }
 /*
 Create functionality to turn off the game once all card pairs are matched. Create conditional to check when tyhe total matched pars is 8.  Then invoke the gameOver function that will stop the clock, write stats on the modal, and show the modal.
@@ -344,14 +339,18 @@ function gameOver() {
 Create functionality for the two modal buttons. Query the element and attach a click event listener to execute the function and then call toggleModal() function to close the modal after the clicking.
 */
 document.querySelector('.modal_cancel').addEventListener('click', () => {
-	resetGame(); // QUESTION: add resetGame() function here?
+	toggleModal(); 
 });
 /*
 Link resetGame() function to a click event listener on the modal replay button.
 */
 document.querySelector('.modal_replay').addEventListener('click', () => {
-	replayGame();
+	replayGame(); //or reset game function?
 });
+/*document.querySelector('.modal_replay').addEventListener('click', resetGame); */
+
+// Link resetGame() function to a click event listener on the RESTART BUTTON located at the top right of the game browser window (NOT THE MODAL)
+document.querySelector('.restart').addEventListener('click', resetGame);
 
 /*
 Create functionality to reset game. Nest other functions inside of resetGame(): resetClockAndTime(), resetMoves(), resetStars(), and shuffleDeck() so that game is ready to be played again.
@@ -360,6 +359,7 @@ function resetGame() {
 	resetClockAndTime();
 	resetMoves();
 	resetStars();
+	resetDeck();
 	shuffleDeck();
 }
 
@@ -395,13 +395,35 @@ function replayGame() {
 	resetGame();
 	toggleModal();
 }
+// Reset all cards to face down to prep for new game
+function resetDeck() {
+	const resetCards = Array.from(document.querySelectorAll('card open show match'));
+	for (card of resetCards){
+		resetCards.classList.remove('open', 'show', 'match');
+	}
+}
+	//const resetCards = forEach(cardsToReset);
 
-/*
-Link resetGame() function to a click event listener on the reset button:
-document.querySelector('.restart').addEventListener('click', resetGame);
-document.querySelector('.modal_replay').addEventListener('click', resetGame);
+	//for (card of resetCards) {
+		//cardsToReset.classList('card');
+	//}
+//}
+
+//yourArray.forEach(function (arrayItem) {
+  //  var x = arrayItem.prop1 + 2;
+    //console.log(x);
+//})
+
+/*function shuffleDeck() {
+	const cardsToShuffle = Array.from(document.querySelectorAll('.deck li'));
+
+	const shuffledCards = shuffle(cardsToShuffle);
+
+	for (card of shuffledCards) {
+		deck.appendChild(card);
+	}
+}
 */
-
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
