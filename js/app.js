@@ -24,7 +24,11 @@ for (card of deck) {
 	});
 }
 */
-
+/* 
+Create variables in GLOBAL SCOPE for shuffled cards.
+*/
+// let shuffledCards = shuffle(cardsToShuffle);
+// let cardsToShuffle = Array.from(document.querySelectorAll('.deck li'));
 /* 
 Create a variable in GLOBAL SCOPE for holding an ampty array and push click targets to this variable that represents the array.
 */
@@ -72,7 +76,7 @@ toggleModal(); // open modal
 function shuffleDeck() {
 	const cardsToShuffle = Array.from(document.querySelectorAll('.deck li'));
 //	console.log('Cards to Shuffle', cardsToShuffle);
-	const shuffledCards = shuffle(cardsToShuffle);
+	const shuffledCards = shuffle(cardsToShuffle); // Moved to global variable
 //	console.log('Shuffled Cards', shuffledCards);
 	for (card of shuffledCards) {
 		deck.appendChild(card);
@@ -215,6 +219,7 @@ function gameOver() {
 	stopClock();
 	writeModalStats();
 	toggleModal();
+	// matched = 0; suggestion from Chelen; doesnt seem to work.
 }
 /* 
 Create addMove() function that 
@@ -381,13 +386,39 @@ function resetMoves() {
 /*
 Create functionality to reset stars variable to zero. Loop through starList to reset star display property back to inline.
 */
-function resetStars() {
+function resetStars() { 
 	stars = 0; 
 	const starList = document.querySelectorAll('stars li');
 	for  (star of starList) {
 		star.style.display = 'inline';
 	}
 }
+
+/*
+function resetDeck() { // SACHIN
+	const resetCards = Array.from(document.querySelectorAll('card'));
+	for (card of resetCards) {
+		card.classList.remove('open', 'show', 'match');
+	}
+}
+*/
+/*
+ //suggestion from Chelen:
+function resetDeck() {
+	for (let i=0; i < shuffledCards.length; i++) {
+		shuffledCards[i].classList.remove("open", "show", "match");
+	}
+}
+*/
+
+// Reset all cards to face down to prep for new game - MY ORIGINAL AS OF 7/1
+function resetDeck() {
+	const cardsToReset = Array.from(document.querySelectorAll('card open show match'));
+	for (card of cardsToReset){
+		card.classList.remove('open', 'show', 'match');
+	}
+}
+
 /*
 Create functionality to replay game. This function invokes the resetGame() function and the toggleModal() function. Link this to the click event listener for the replay button on the modal.
 */
@@ -395,35 +426,7 @@ function replayGame() {
 	resetGame();
 	toggleModal();
 }
-// Reset all cards to face down to prep for new game
-function resetDeck() {
-	const resetCards = Array.from(document.querySelectorAll('card open show match'));
-	for (card of resetCards){
-		resetCards.classList.remove('open', 'show', 'match');
-	}
-}
-	//const resetCards = forEach(cardsToReset);
 
-	//for (card of resetCards) {
-		//cardsToReset.classList('card');
-	//}
-//}
-
-//yourArray.forEach(function (arrayItem) {
-  //  var x = arrayItem.prop1 + 2;
-    //console.log(x);
-//})
-
-/*function shuffleDeck() {
-	const cardsToShuffle = Array.from(document.querySelectorAll('.deck li'));
-
-	const shuffledCards = shuffle(cardsToShuffle);
-
-	for (card of shuffledCards) {
-		deck.appendChild(card);
-	}
-}
-*/
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
